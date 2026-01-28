@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Bill & Receipt OCR</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <h2>Extracted Bill Details</h2>
+
+        <div id="bill-details">
+            <p class="placeholder">
+                Upload a bill to see extracted details here.
+            </p>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <h2>Upload Bill / Receipt</h2>
+
+        <div class="upload-box">
+            <input type="file" id="billImage" accept="image/*" />
+            <button onclick="uploadBill()">Upload</button>
+        </div>
+
+        <div class="image-preview">
+            <img id="previewImage" />
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
