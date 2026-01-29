@@ -1,7 +1,5 @@
-"""
-document_classifier.py
-Detects document type based on OCR content.
-"""
+
+# Detects document type based on OCR content.
 
 def detect_document_type(text):
  

@@ -1,6 +1,4 @@
 """
-app.py
-------
 Main Flask application.
 
 Responsibilities:
@@ -8,7 +6,6 @@ Responsibilities:
 2. Run OCR pipeline
 3. Return structured data
 
-Business logic is delegated to OCR modules.
 """
 
 from flask import Flask, request, jsonify
@@ -19,23 +16,20 @@ from ocr.preprocessing import preprocess_image
 from ocr.ocr_engine import extract_text
 from ocr.parser import parse_bill_text
 
-# -----------------------
 # Flask App Setup
-# -----------------------
+
 app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# -----------------------
 # Upload Endpoint
-# -----------------------
+
 @app.route("/upload", methods=["POST"])
 def upload_bill():
-    """
-    Receives bill image and returns structured OCR output.
-    """
+
+ #  Receives bill image and returns structured OCR output.
 
     # Validate request
     if "image" not in request.files:

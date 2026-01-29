@@ -1,18 +1,8 @@
-"""
-preprocessing.py
-----------------
-Handles ONLY image preprocessing.
 
-Purpose:
-Improve OCR accuracy by enhancing image quality.
-"""
 
 import cv2
 
 def preprocess_image(image_path):
-    """
-    Reads image and prepares it for OCR.
-    """
 
     # Load image
     image = cv2.imread(image_path)

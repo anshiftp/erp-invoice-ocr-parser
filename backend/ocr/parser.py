@@ -1,16 +1,11 @@
-"""
-parser.py
----------
-Converts raw OCR text into structured, ERP-style invoice data.
-"""
+
+# Converts raw OCR text into structured, ERP-style invoice data.
 
 import re
 from typing import List, Dict
 from ocr.document_classifier import detect_document_type
 
-# ==========================================================
 # MAIN ENTRY POINT
-# ==========================================================
 
 def parse_bill_text(text: str) -> Dict:
     lines = normalize_lines(text)
@@ -35,9 +30,8 @@ def parse_bill_text(text: str) -> Dict:
         "amounts": amounts,
     }
 
-# ==========================================================
 # NORMALIZATION
-# ==========================================================
+
 def normalize_lines(text: str) -> List[str]:
     lines = []
     for line in text.split("\n"):
@@ -50,9 +44,8 @@ def normalize_lines(text: str) -> List[str]:
     return lines
 
 
-# ==========================================================
 # VENDOR EXTRACTION
-# ==========================================================
+
 def extract_vendor(lines: List[str]) -> Dict:
     name = None
     gstin = None
@@ -86,9 +79,8 @@ def extract_vendor(lines: List[str]) -> Dict:
     }
 
 
-# ==========================================================
 # INVOICE + DATE
-# ==========================================================
+
 def extract_invoice(lines: List[str]) -> Dict:
     invoice_no = None
     date = None
@@ -115,17 +107,14 @@ def extract_invoice(lines: List[str]) -> Dict:
     }
 
 
-# ==========================================================
 # ITEM EXTRACTION (FIXED)
-# ==========================================================
+
 def extract_items(lines: List[str], doc_type: str) -> List[Dict]:
     """
     Robust OCR-safe item extractor.
     """
     items = []
 
-    # FIX: Removed the document type check check (if doc_type not in ...)
-    # This ensures items are extracted even if the classifier is unsure.
 
     for line in lines:
         original = line.lower()
@@ -137,7 +126,6 @@ def extract_items(lines: List[str], doc_type: str) -> List[Dict]:
         ]):
             continue
 
-        # Normalize OCR noise
         clean = (
             line.replace("₹", "")
                 .replace("X", " ")
@@ -153,7 +141,6 @@ def extract_items(lines: List[str], doc_type: str) -> List[Dict]:
             continue
 
         try:
-            # Parse as floats first to handle decimals safely, then convert if needed
             total = float(numbers[-1])
             quantity = float(numbers[-2])
             unit_price = float(numbers[-3])
@@ -168,7 +155,6 @@ def extract_items(lines: List[str], doc_type: str) -> List[Dict]:
             continue
 
         # Logical validation (VERY important)
-        # Using a small epsilon for float comparison safety
         if abs((unit_price * quantity) - total) > 1.0:
             continue
 
@@ -182,9 +168,8 @@ def extract_items(lines: List[str], doc_type: str) -> List[Dict]:
     return items
 
 
-# ==========================================================
 # AMOUNTS
-# ==========================================================
+
 def extract_amounts(lines: List[str]) -> Dict:
     subtotal = None
     total = None

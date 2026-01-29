@@ -1,16 +1,6 @@
-"""
-ocr_engine.py
--------------
-Handles ONLY OCR using Tesseract.
-No preprocessing. No parsing.
-"""
-
 import pytesseract
 
 def extract_text(processed_image):
-    """
-    Runs OCR on processed image and returns raw text.
-    """
 
     # OCR configuration
     # OEM 3 = best engine
