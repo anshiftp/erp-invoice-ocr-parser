@@ -188,3 +188,9 @@ Database persistence
 This project demonstrates real-world OCR handling, not textbook perfection.
 It focuses on robust engineering, defensive parsing, and production-safe outputs — exactly what ERP systems require.
 
+
+## screenshots
+<img width="1912" height="955" alt="ui" src="https://github.com/user-attachments/assets/445ef660-b45b-4102-ba9a-cd3154d748e5" />
+<img width="1919" height="971" alt="ui with output" src="https://github.com/user-attachments/assets/34fbdd8c-012d-4414-b435-4738a1675d1d" />
+
+
