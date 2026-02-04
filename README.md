@@ -136,8 +136,17 @@ Launch the UI: Open frontend/index.html in any modern web browser.
 [ ] Multi-language invoice support.
 
 [ ] Async batch processing for high-volume uploads.
-
 ## 🏁 Final Note
 This project reflects real-world document intelligence engineering, not textbook OCR. It focuses on practical decision-making and responsible AI use.
 
 The goal is not to extract everything — the goal is to extract only what can be trusted.
+
+## Screenshots
+
+
+<img width="1919" height="867" alt="Screenshot 2026-02-05 040109" src="https://github.com/user-attachments/assets/2c276fd7-3c01-405f-8b5e-5324714ce90d" />
+<img width="1919" height="860" alt="Screenshot 2026-02-05 040037" src="https://github.com/user-attachments/assets/735bfeb2-bc44-49c1-8a3d-439f35ab0e8c" />
+<img width="1918" height="861" alt="Screenshot 2026-02-05 035938" src="https://github.com/user-attachments/assets/2304bffa-f5d2-4c28-938a-16be781e1bdd" />
+<img width="1916" height="865" alt="Screenshot 2026-02-05 035855" src="https://github.com/user-attachments/assets/32316fe8-2c8e-41c1-a2af-7a7b38b3337a" />
+<img width="1919" height="864" alt="Screenshot 2026-02-05 035755" src="https://github.com/user-attachments/assets/9f7992f2-8664-4d62-9fa5-1c19d8356455" />
+<img width="1918" height="854" alt="Screenshot 2026-02-05 040133" src="https://github.com/user-attachments/assets/c47d08cd-9af6-4c16-af2b-45a9339a3fa8" />
