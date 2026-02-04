@@ -1,78 +1,62 @@
 # 🧾 ERP Invoice OCR Parser
 
-A **rule-based OCR invoice parser** that converts scanned bills and receipts into **structured ERP-style JSON**, supporting restaurant and grocery invoices.
+Enterprise Resource Planning (ERP) systems cannot tolerate hallucinated or partially incorrect financial data. A wrong GST number or invoice total is far more damaging than a missing value. 
 
-This project focuses on **robust text normalization, document classification, and fault-tolerant item extraction** from noisy OCR output.
+This project addresses that constraint by prioritizing **correctness over completeness**, **explainability over blind inference**, and **schema safety over heuristic guessing**.
 
 ---
 
 ## 🚀 Features
 
-- 📸 Image upload (bills / receipts)
-- 🧠 OCR using **Tesseract**
-- 🧹 Image preprocessing with **OpenCV**
-- 🧾 Automatic **document type detection**
-- 📦 Rule-based parsing into **ERP-style JSON**
-- 🧮 Line-item extraction (name, unit price, quantity, total)
-- 💰 Subtotal, tax (CGST / SGST), and grand total extraction
-- 🛑 Graceful failure (returns `null` instead of incorrect values)
-- 🌐 Frontend + Backend integration
+- 📸 **Multimodal Extraction:** Supports scanned invoices, receipts, and complex A4 bills.
+- 🧠 **Engine-Agnostic Architecture:** Pluggable engines including Rule-Based, Donut (Vision-Language), and Gemini (Multimodal LLM).
+- 🧹 **Advanced Preprocessing:** Uses OpenCV to reduce noise and handle uneven lighting/warped scans.
+- 🧾 **ERP-Style Structured JSON:** Outputs strictly validated data compatible with systems like SAP, Oracle, and Odoo.
+- 🛑 **Null-Safe Extraction:** Defensive parsing that returns `null` for ambiguous values rather than guessing.
+- 🌐 **Real-time Testing:** Full Frontend + Backend integration for immediate validation.
 
 ---
 
-## 🏗️ Architecture Overview
+## 🏗️ System Architecture
 
 ```text
-Image Upload
-   ↓
-Image Preprocessing (OpenCV)
-   ↓
-OCR Extraction (Tesseract)
-   ↓
-Document Classification
-   ↓
-Rule-Based Parsing
-   ↓
-Structured ERP JSON Output
-
-```
----
+Image Upload (Frontend)
+        ↓
+Backend API (Flask)
+        ↓
+Document Understanding Engine
+(Rule-Based / Donut / Gemini)
+        ↓
+Validation & Normalization Layer
+        ↓
+ERP-Compatible Structured JSON
+The system is designed to be engine-agnostic, allowing different extraction strategies to be plugged in without changing the API contract.
+````
 
 ## 📂 Project Structure
-```text
-
+````
 erp-invoice-ocr-parser/
 │
 ├── backend/
-│   ├── app.py
+│   ├── app.py                  # API entry point & Flask routing
+│   ├── engines/
+│   │   ├── donut/               # Vision-language model (Donut)
+│   │   └── gemini/              # Multimodal LLM engine (Final Direction)
 │   ├── ocr/
-│   │   ├── preprocessing.py
-│   │   ├── ocr_engine.py
-│   │   ├── document_classifier.py
-│   │   ├── parser.py
-│   │   └── __init__.py
+│   │   ├── preprocessing.py     # Image cleaning with OpenCV
+│   │   ├── ocr_engine.py        # Tesseract OCR extraction
+│   │   ├── document_classifier.py# Layout detection
+│   │   └── parser.py            # Rule-based logic & arithmetic validation
+│   └── uploads/                 # Temporary storage for processed images
 │
-├── frontend/
-│   ├── index.html
-│   ├── script.js
-│   └── style.css
-│
-├── sample_images/
-│   ├── restaurant_receipt.jpg
-│   ├── grocery_bill.jpg
-│   └── fuel_invoice.jpg
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
-```
----
-
-## 🧪 Sample Output (ERP-Style)
-
-```json
+├── frontend/                    # Vanilla JS, HTML, CSS interface
+├── requirements.txt             # Project dependencies
+└── README.md
+````
+## 🧪 Sample ERP Output
+````
+JSON
 {
-  "document_type": "restaurant",
   "vendor": {
     "name": "Bhagini",
     "gstin": "29ADDPR8125K1Z2",
@@ -84,16 +68,10 @@ erp-invoice-ocr-parser/
   },
   "items": [
     {
-      "name": "Mutton biriyani",
+      "name": "Mutton Biriyani",
       "unit_price": 400,
       "quantity": 4,
       "total": 1600
-    },
-    {
-      "name": "Tandoori Roti",
-      "unit_price": 30,
-      "quantity": 5,
-      "total": 150
     }
   ],
   "amounts": {
@@ -104,93 +82,62 @@ erp-invoice-ocr-parser/
   }
 }
 
-```
-## 🧠 Parsing Strategy (Important)
-OCR output is noisy and inconsistent, so this project uses a defensive, rule-based approach.
+````
 
-Item Extraction Logic
-Reads numeric values right → left (total → quantity → unit price)
 
-Removes OCR noise (₹, X, commas, stray symbols)
+Design Principle: If a value cannot be validated with confidence, it is returned as null.
 
-Extracts item name by removing numeric tokens
+## 🧠 Parsing & Validation Philosophy
+Invoice OCR is inherently noisy. This system applies defensive extraction techniques:
 
-Validates rows using:
+Rule-Based Validation Logic
+Arithmetic Consistency: Item rows are validated using unit_price × quantity ≈ total.
 
-unit_price × quantity ≈ total
-Rejects invalid or ambiguous lines to prevent false positives
+Right → Left Parsing: Numeric fields are prioritized from the total backward to ensure quantity and price alignment.
 
-This approach ensures ERP-safe structured output even with imperfect OCR data.
+Noise Removal: Automatic stripping of OCR artifacts like ₹, commas, and stray symbols before conversion.
 
-## 🛠️ Tech Stack
-Python
+Explored Approaches
+Rule-Based OCR: High explainability but breaks on layout variance.
 
-Flask
+Donut (Vision-Language): Eliminates OCR dependency but suffers from inconsistent schema reliability.
 
-Flask-CORS
+Gemini (Multimodal LLM): Final direction; robust to unseen layouts with strict schema enforcement.
 
-OpenCV
+## 🛠️ Technology Stack
+Backend: Python, Flask, Flask-CORS
 
-Tesseract OCR
+Image Processing: OpenCV
 
-HTML / CSS / JavaScript
+OCR: Tesseract
 
-## ▶️ How to Run Locally
-1️⃣ Install dependencies
+AI Models: Donut (HuggingFace), Gemini 2.5 Flash (Google SDK)
 
+Frontend: HTML5, CSS3, JavaScript (Vanilla)
+
+## ▶️ Running Locally
+Clone the repository and install dependencies:
+
+Bash
 pip install -r requirements.txt
+Setup Gemini API Key: Add your API key to backend/engines/gemini/gemini_engine.py.
 
-2️⃣ Install Tesseract OCR
-Windows
+Run the backend:
 
-Download from: https://github.com/UB-Mannheim/tesseract/wiki
-
-Add Tesseract to system PATH
-
-3️⃣ Run backend
-
+Bash
 python backend/app.py
+Launch the UI: Open frontend/index.html in any modern web browser.
 
-4️⃣ Open frontend
+## 📈 Roadmap
+[ ] Confidence scoring per extracted field.
 
-Open frontend/index.html in your browser.
+[ ] Hybrid routing (deterministic rules + ML).
 
-## ⚠️ Limitations
-Rule-based (no ML training)
+[ ] Multi-language invoice support.
 
-Accuracy depends on OCR quality
+[ ] Async batch processing for high-volume uploads.
 
-Highly complex tabular invoices may require additional heuristics
+## 🏁 Final Note
+This project reflects real-world document intelligence engineering, not textbook OCR. It focuses on practical decision-making and responsible AI use.
 
-## 📌 Why Rule-Based?
-This project intentionally avoids ML-based parsing to:
-
-Maintain explainability
-
-Avoid training data dependency
-
-Ensure predictable and safe ERP outputs
-
-Handle edge cases deterministically
-
-## 📈 Future Improvements
-ML-assisted line-item detection
-
-Confidence scoring for extracted fields
-
-Multi-language OCR support
-
-Export to CSV / Excel
-
-Database persistence
-
-## 🙌 Final Note
-This project demonstrates real-world OCR handling, not textbook perfection.
-It focuses on robust engineering, defensive parsing, and production-safe outputs — exactly what ERP systems require.
-
-
-## screenshots
-<img width="1912" height="955" alt="ui" src="https://github.com/user-attachments/assets/445ef660-b45b-4102-ba9a-cd3154d748e5" />
-<img width="1919" height="971" alt="ui with output" src="https://github.com/user-attachments/assets/34fbdd8c-012d-4414-b435-4738a1675d1d" />
-
-
+The goal is not to extract everything — the goal is to extract only what can be trusted.

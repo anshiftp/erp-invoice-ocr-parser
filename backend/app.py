@@ -1,22 +1,8 @@
-"""
-Main Flask application.
-
-Responsibilities:
-1. Accept image uploads from frontend
-2. Run OCR pipeline
-3. Return structured data
-
-"""
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-
-from ocr.preprocessing import preprocess_image
-from ocr.ocr_engine import extract_text
-from ocr.parser import parse_bill_text
-
-# Flask App Setup
+# This imports the function from the OTHER file
+from engines.gemini.gemini_engine import run_gemini 
 
 app = Flask(__name__)
 CORS(app)
@@ -24,34 +10,24 @@ CORS(app)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Upload Endpoint
-
 @app.route("/upload", methods=["POST"])
 def upload_bill():
-
- #  Receives bill image and returns structured OCR output.
-
-    # Validate request
     if "image" not in request.files:
-        return jsonify({"error": "Image not provided"}), 400
+        return jsonify({"error": "No image provided"}), 400
 
     image = request.files["image"]
-
-    if image.filename == "":
-        return jsonify({"error": "Empty filename"}), 400
-
-    # Save uploaded image
     image_path = os.path.join(UPLOAD_FOLDER, image.filename)
     image.save(image_path)
 
-    # OCR Pipeline
-    processed_image = preprocess_image(image_path)
-    raw_text = extract_text(processed_image)
-    structured_data = parse_bill_text(raw_text)
+    print("DEBUG: Sending to Gemini...")
+
+    # Run the engine
+    structured_data = run_gemini(image_path)
 
     return jsonify({
-        "raw_text": raw_text,
-        "structured_data": structured_data
+        "engine": "gemini-1.5-flash",
+        "structured_data": structured_data,
+        "raw_donut_output": structured_data 
     })
 
 if __name__ == "__main__":

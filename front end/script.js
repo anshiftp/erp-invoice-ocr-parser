@@ -35,7 +35,7 @@
 
 billDetails.innerHTML = `
   <h4>Raw OCR Output</h4>
-  <pre>${data.raw_text}</pre>
+  <pre>${JSON.stringify(data.raw_donut_output, null, 2)}</pre>
 
   <h4>Structured Output</h4>
 
